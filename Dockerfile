@@ -6,10 +6,10 @@ FROM python:3.8
 # to the terminal with out buffering it first
 ENV PYTHONUNBUFFERED 1
 
-RUN mkdir -p /importer
+RUN mkdir -p /importerservice
 
 # Set the working directory to /importer
-WORKDIR /importer
+WORKDIR /importerservice
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
