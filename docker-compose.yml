@@ -62,6 +62,21 @@ services:
     env_file:
       - .env
 
+#  postgres-db:
+#    image: postgres:11.4
+#    container_name: postgres-db
+#    restart: always
+#    environment:
+#      POSTGRES_USERNAME: root
+#      POSTGRES_PASSWORD: root123
+#      POSTGRES_DB: acme
+#    ports:
+#      - "15431:5432"
+#    networks:
+#      - web-db-net
+#    volumes:
+#      - ./mounted_data/pg_data:/var/lib/postgresql/data
+
 
 
 
