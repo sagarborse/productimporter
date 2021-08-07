@@ -37,11 +37,11 @@ services:
     command: bash -c "/bin/bash celeryschedulerstart.sh"
     container_name: beat
     volumes:
-      - .:/commservice
+      - .:/importerservice
     networks:
       - web-db-net
     depends_on:
-      - comm-service
+      - importer-service
     env_file:
       - .env
 
@@ -51,7 +51,7 @@ services:
     ports:
       - "5555:5555"
     volumes:
-      - .:/commservice
+      - .:/importerservice
     expose:
       - 5555
     command: bash -c  "/bin/bash flowerstart.sh"
