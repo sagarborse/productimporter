@@ -31,7 +31,7 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('SECRET_KEY')
 
 ALLOWED_HOSTS = []
-
+FILE_UPLOADS_PATH = os.path.join(MAIN_DIR, env('FILE_UPLOAD_DIR'))
 
 # Application definition
 
@@ -85,7 +85,7 @@ DATABASES = {
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
+        'HOST': os.environ.get('DB_HOST'), #host.docker.internal
         'PORT': os.environ.get('DB_PORT'),
     },
 }
@@ -142,3 +142,84 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Kolkata'
 
+#Logging
+
+# importing logger settings
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'formatters': {
+        'large': {
+            'format': '%(asctime)s  %(levelname)s  %(process)d  %(pathname)s  %(funcName)s  %(lineno)d  %(message)s  '
+        },
+        'tiny': {
+            'format': '%(asctime)s  %(message)s  '
+        },
+        'json': {
+            '()': 'pythonjsonlogger.jsonlogger.JsonFormatter',
+            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'large'
+        },
+        # 'logfile': {
+        #     'level': 'INFO',
+        #     'class': 'logging.handlers.TimedRotatingFileHandler',
+        #     'when': 'midnight',
+        #     'interval': 1,
+        #     'filename': env('LOG_FILE_PATH'),
+        #     'formatter': 'json',
+        # },
+        # 'mail_admins': {
+        #     'level': 'ERROR',
+        #     'filters': ['require_debug_false'],
+        #     'class': 'django.utils.log.AdminEmailHandler'
+        # },
+        # 'logstash': {
+        #     'level': env('DJANGO_LOG_LEVEL'),
+        #     'class': 'logstash.UDPLogstashHandler',
+        #     'host': env('LOGSTASH_HOST'),
+        #     'port': env.int('LOGSTASH_PORT'),  # Default value: 5959
+        #     'version': 1,  # Version of logstash event schema. Default value: 0 (for backward compatibility of the library)
+        #     'message_type': 'comm_service',  # 'type' field in logstash message. Default value: 'logstash'.
+        #     'fqdn': False,  # Fully qualified domain name. Default value: false.
+        #     'tags': ['django.request'],  # list of tags. Default: None.
+        # }
+    },
+    'loggers': {
+        'django': {
+            'handlers': env.list('HANDLERS'),
+            'level': env('DJANGO_LOG_LEVEL'),
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': [],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'custom_logger': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'celery.task': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
