@@ -12,6 +12,6 @@ class Product(models.Model):
     is_active = models.BooleanField()
 
     def __str__(self):
-        return "{} - {}".format(self.otp_key, self.otp)
+        return "{} - {}".format(self.name, self.sku)
 
 
